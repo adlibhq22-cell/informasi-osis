@@ -1,0 +1,10 @@
+<?php
+require_once dirname(__DIR__) . '/includes/functions.php';
+$pageTitle = 'Pengumuman';
+$items = $pdo->query("SELECT p.*, u.nama AS admin_nama FROM pengumuman p LEFT JOIN users u ON u.id=p.dibuat_oleh ORDER BY (p.penting='ya') DESC, p.created_at DESC")->fetchAll();
+require dirname(__DIR__) . '/includes/header.php';
+?>
+<section class="page-hero"><div class="container"><span class="eyebrow eyebrow-light">PUSAT INFORMASI</span><h1>Pengumuman<span class="text-accent">.</span></h1><p>Kabar resmi, agenda penting, dan informasi terbaru dari OSIS.</p><div class="breadcrumb"><a href="<?= osis_e(osis_url('index.php')) ?>">Beranda</a><span>/</span><span>Pengumuman</span></div></div></section>
+<section class="section section-paper"><div class="container"><div class="section-heading"><div><span class="eyebrow">TERBARU DARI OSIS</span><h2>Untuk kamu ketahui<span class="text-accent">.</span></h2></div><span class="result-count"><?= count($items) ?> informasi</span></div>
+<?php if ($items): ?><div class="announcement-list"><?php foreach ($items as $item): ?><a class="announcement-row" href="<?= osis_e(osis_url('public/pengumuman-detail.php?id=' . (int)$item['id'])) ?>"><div class="announcement-date"><strong><?= osis_e(date('d', strtotime($item['created_at']))) ?></strong><span><?= osis_e(date('M Y', strtotime($item['created_at']))) ?></span></div><div class="announcement-row-copy"><div class="badge-line"><?php if ($item['penting'] === 'ya'): ?><span class="badge badge-important">Penting</span><?php endif; ?><span class="mini-date">Informasi OSIS</span></div><h3><?= osis_e($item['judul']) ?></h3><p><?= osis_e(mb_strimwidth(strip_tags($item['isi']), 0, 210, '…', 'UTF-8')) ?></p></div><span class="round-arrow">↗</span></a><?php endforeach; ?></div><?php else: ?><div class="empty-state"><span>▤</span><h3>Belum ada pengumuman</h3><p>Pantau halaman ini untuk mendapatkan informasi terbaru.</p></div><?php endif; ?></div></section>
+<?php require dirname(__DIR__) . '/includes/footer.php'; ?>

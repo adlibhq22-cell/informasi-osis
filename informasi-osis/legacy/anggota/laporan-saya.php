@@ -1,0 +1,11 @@
+<?php
+require_once dirname(__DIR__) . '/includes/functions.php';
+osis_require_any_role(['anggota','pengurus']);
+$pageTitle = 'Laporan saya';
+$stmt = $pdo->prepare('SELECT id FROM anggota WHERE user_id=? LIMIT 1'); $stmt->execute([osis_current_user()['id']]); $member = $stmt->fetch();
+$items = [];
+if ($member) { $stmt=$pdo->prepare('SELECT l.*, k.nama AS kategori FROM laporan l LEFT JOIN kategori_laporan k ON k.id=l.kategori_id WHERE l.anggota_id=? ORDER BY l.created_at DESC'); $stmt->execute([$member['id']]); $items=$stmt->fetchAll(); }
+require dirname(__DIR__) . '/includes/header.php';
+?>
+<section class="section section-paper"><div class="container member-page"><div class="member-page-heading"><a class="back-link" href="<?= osis_e(osis_url('anggota/dashboard.php')) ?>">← Dashboard</a><span class="eyebrow">RIWAYAT ASPIRASI</span><h1>Laporan saya<span class="text-accent">.</span></h1><p>Pantau status laporan dan tanggapan dari admin OSIS.</p></div><?php if (!$member): ?><div class="alert alert-warning">Akunmu belum terhubung dengan data anggota. Hubungi admin OSIS.</div><?php elseif ($items): ?><div class="report-list"><?php foreach ($items as $item): ?><article class="report-card"><div class="report-card-top"><div><span class="mini-date"><?= osis_e(osis_format_date($item['created_at'], true)) ?> · <?= osis_e($item['kategori'] ?: 'Aspirasi umum') ?></span><h2><?= osis_e($item['judul']) ?></h2></div><span class="badge badge-status badge-<?= osis_e($item['status']) ?>"><?= osis_e(ucfirst($item['status'])) ?></span></div><p><?= nl2br(osis_e($item['isi'])) ?></p><?php if ($item['file']): ?><a class="text-link" target="_blank" rel="noopener" href="<?= osis_e(osis_image_url($item['file'])) ?>">Lihat lampiran ↗</a><?php endif; ?><?php if ($item['balasan']): ?><div class="admin-reply"><strong>Tanggapan admin</strong><p><?= nl2br(osis_e($item['balasan'])) ?></p></div><?php endif; ?></article><?php endforeach; ?></div><?php else: ?><div class="empty-state"><span>▱</span><h3>Belum ada laporan</h3><p>Aspirasi yang kamu kirim akan muncul di sini.</p><a class="button button-primary" href="<?= osis_e(osis_url('anggota/laporan-kirim.php')) ?>">Kirim laporan <span>↗</span></a></div><?php endif; ?></div></section>
+<?php require dirname(__DIR__) . '/includes/footer.php'; ?>

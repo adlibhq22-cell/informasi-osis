@@ -1,0 +1,3 @@
+<?php
+require_once dirname(__DIR__) . '/_common.php';
+if(!osis_admin_is_post()){http_response_code(405);exit('Metode tidak diizinkan.');}osis_verify_csrf();$id=isset($_POST['id'])?(int)$_POST['id']:0;$stmt=$pdo->prepare('SELECT judul FROM pengumuman WHERE id=?');$stmt->execute([$id]);$item=$stmt->fetch();if($item){$pdo->prepare('DELETE FROM pengumuman WHERE id=?')->execute([$id]);osis_log_activity('Menghapus pengumuman: '.$item['judul']);osis_set_flash('success','Pengumuman berhasil dihapus.');}else{osis_set_flash('error','Pengumuman tidak ditemukan.');}osis_redirect('admin/pengumuman/index.php');

@@ -1,0 +1,10 @@
+<?php
+require_once dirname(__DIR__) . '/includes/functions.php';
+$pageTitle = 'Galeri';
+$albums = $pdo->query("SELECT a.*, (SELECT COUNT(*) FROM galeri_foto f WHERE f.album_id=a.id) AS foto_count, (SELECT file FROM galeri_foto WHERE album_id=a.id ORDER BY id ASC LIMIT 1) AS cover FROM galeri_album a ORDER BY a.tanggal DESC, a.id DESC")->fetchAll();
+require dirname(__DIR__) . '/includes/header.php';
+?>
+<section class="page-hero page-hero-coral"><div class="container"><span class="eyebrow eyebrow-light">MOMEN YANG TERSIMPAN</span><h1>Galeri<span class="text-accent">.</span></h1><p>Potongan cerita dari perjalanan dan kegiatan OSIS.</p><div class="breadcrumb"><a href="<?= osis_e(osis_url('index.php')) ?>">Beranda</a><span>/</span><span>Galeri</span></div></div></section>
+<section class="section section-paper"><div class="container"><div class="section-heading"><div><span class="eyebrow">ALBUM FOTO</span><h2>Cerita dalam gambar<span class="text-accent">.</span></h2></div><span class="result-count"><?= count($albums) ?> album</span></div>
+<?php if ($albums): ?><div class="album-grid"><?php foreach ($albums as $i => $album): ?><a class="album-card" href="<?= osis_e(osis_url('public/galeri-album.php?id=' . (int)$album['id'])) ?>"><div class="album-cover album-cover-<?= $i % 4 ?>"><?php if ($album['cover']): ?><img src="<?= osis_e(osis_image_url($album['cover'])) ?>" alt="<?= osis_e($album['judul']) ?>"><?php else: ?><span class="album-empty-icon">▧</span><?php endif; ?><span class="photo-count">▧ <?= (int)$album['foto_count'] ?> foto</span></div><div class="album-info"><span class="mini-date"><?= osis_e(osis_format_date($album['tanggal'])) ?></span><h3><?= osis_e($album['judul']) ?></h3><p><?= osis_e(mb_strimwidth(strip_tags($album['deskripsi']), 0, 100, '…', 'UTF-8')) ?></p><span class="text-link">Buka album <b>↗</b></span></div></a><?php endforeach; ?></div><?php else: ?><div class="empty-state"><span>▧</span><h3>Album belum tersedia</h3><p>Dokumentasi kegiatan akan hadir di sini.</p></div><?php endif; ?></div></section>
+<?php require dirname(__DIR__) . '/includes/footer.php'; ?>

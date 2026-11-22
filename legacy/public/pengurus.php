@@ -1,0 +1,9 @@
+<?php
+require_once dirname(__DIR__) . '/includes/functions.php';
+$pageTitle = 'Pengurus';
+$items = $pdo->query('SELECT p.*, a.kelas FROM pengurus p LEFT JOIN anggota a ON a.id=p.anggota_id ORDER BY p.id ASC')->fetchAll();
+require dirname(__DIR__) . '/includes/header.php';
+?>
+<section class="page-hero page-hero-green"><div class="container"><span class="eyebrow eyebrow-light">TIM DI BALIK KEGIATAN</span><h1>Pengurus OSIS<span class="text-accent">.</span></h1><p>Kenali teman-teman yang bekerja bersama membawa ide menjadi aksi.</p><div class="breadcrumb"><a href="<?= osis_e(osis_url('index.php')) ?>">Beranda</a><span>/</span><span>Pengurus</span></div></div></section>
+<section class="section section-paper"><div class="container"><div class="section-heading"><div><span class="eyebrow">PERIODE SAAT INI</span><h2>Orang-orangnya<span class="text-accent">.</span></h2></div><span class="result-count"><?= count($items) ?> pengurus</span></div><?php if ($items): ?><div class="people-grid"><?php foreach ($items as $i => $person): ?><article class="person-card"><div class="person-photo person-photo-<?= $i % 4 ?>"><?php if ($person['foto']): ?><img src="<?= osis_e(osis_image_url($person['foto'])) ?>" alt="<?= osis_e($person['nama']) ?>"><?php else: ?><span><?= osis_e(mb_strtoupper(mb_substr($person['nama'], 0, 1, 'UTF-8'), 'UTF-8')) ?></span><?php endif; ?></div><div class="person-info"><span class="eyebrow"><?= osis_e($person['periode'] ?: 'PENGURUS OSIS') ?></span><h3><?= osis_e($person['nama']) ?></h3><p><?= osis_e($person['jabatan']) ?></p><?php if ($person['kelas']): ?><span class="mini-date">Kelas <?= osis_e($person['kelas']) ?></span><?php endif; ?></div></article><?php endforeach; ?></div><?php else: ?><div class="empty-state"><span>♙</span><h3>Data pengurus belum tersedia</h3><p>Profil pengurus akan ditampilkan di sini.</p></div><?php endif; ?></div></section>
+<?php require dirname(__DIR__) . '/includes/footer.php'; ?>

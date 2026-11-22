@@ -1,0 +1,87 @@
+/* Shared header surface and readable dark-theme accents. */
+.site-header {
+    background: var(--cream);
+    border-bottom-color: transparent;
+}
+
+html[data-theme="dark"] .redesign-note,
+html[data-theme="dark"] .redesign-heart {
+    color: #2c4039;
+}
+
+html[data-theme="dark"] .redesign-note strong,
+html[data-theme="dark"] .redesign-heart strong {
+    color: #2c4039;
+}
+
+html[data-theme="dark"] .redesign-note > span {
+    color: #455a3b;
+}
+
+html[data-theme="dark"] .redesign-heart small {
+    color: #617264;
+}
+
+html[data-theme="dark"] .hero-copy > .eyebrow,
+html[data-theme="dark"] .section-heading .eyebrow,
+html[data-theme="dark"] .page-hero .eyebrow-light {
+    color: #b5c6a5;
+}
+
+html[data-theme="dark"] .hero-bottom,
+html[data-theme="dark"] .hero-bottom > a,
+html[data-theme="dark"] .page-hero p,
+html[data-theme="dark"] .breadcrumb,
+html[data-theme="dark"] .breadcrumb a {
+    color: #b4c1b4;
+}
+
+html[data-theme="dark"] .hero-bottom {
+    border-color: #354844;
+}
+
+html[data-theme="dark"] .redesign-stat-intro em {
+    color: #b6ca9f;
+}
+
+@keyframes page-content-enter {
+    from { opacity: 0; transform: translateY(9px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes page-content-leave {
+    to { opacity: 0; transform: translateY(-6px); }
+}
+
+body.page-entering main {
+    animation: page-content-enter 320ms cubic-bezier(.2,.7,.2,1) both;
+}
+
+body.page-leaving main {
+    animation: page-content-leave 150ms ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.page-entering main,
+    body.page-leaving main {
+        animation: none !important;
+    }
+}
+/* Keep the dark navigation continuous with the shared header surface. */
+html[data-theme="dark"] .main-nav {
+    background: var(--cream);
+    border-color: transparent;
+    box-shadow: none;
+}
+
+html[data-theme="dark"] .main-nav > a {
+    color: #d3ded4;
+}
+
+html[data-theme="dark"] .main-nav > a:hover {
+    color: #f2a18b;
+}
+
+.main-nav .nav-login[aria-current="page"]::after {
+    display: none;
+}
